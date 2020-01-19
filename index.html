@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=550">
+    <meta name="theme-color" content="#4F9170">
+    <meta name="description" content="Aplikace k převádění měn, kurzy jsou denně aktualizovány, fungujicí na dostupném API od ČNB">
+    <title>Převody měn</title>
+    <link rel="stylesheet" href="css/loader.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/main.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
+</head>
+<body>
+<div class="overlay-loader">
+    <div class="loader">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+</div>
+<div class="body" style="display:none;">
+<header>
+<div class="jumbotron" id="header">
+    <div class="container">
+        <h1 class="display-4">Převody měn</h1>
+        <p class="lead">Aplikace k převádění měn, kurzy jsou pravidelně aktualizovány, poslední změna kurzu: <span class="last_date"></span></p>
+    </div>
+</div>
+</header>
+<nav class="navbar navbar-light bg-light" id="nav">
+    <div class="container">
+        <span class="navbar-text">Aplikace byla vytvořena v roce 2019 pro soutěž od <a href="https://www.itnetwork.cz/" data-toggle="tooltip" title="ITnetwork.cz - česká IT sociální síť">ITnetwork.cz</a>, je naprogramována v JavaScriptu a využívá kurzovní lístek od <a href="https://www.cnb.cz/cs/" data-toggle="tooltip" title="Česká národní banka">ČNB</a> (<a href="https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.xml">API</a>)</span>
+    </div>
+</nav>
+<main style="padding: .5rem 1rem;">
+<div class="container">
+    <h4>
+        Převod
+        <small class="text-muted">(dostupných je <span id="currency_count"></span> měn, číslo se líší od datumu)</small>
+        <hr/>
+    </h4>
+    <div class="row" id="selecting-row">
+         <div class="col-5">
+             <select class="form-control meny" id="first" size="6">
+             </select>
+             <div class="form-group inputs-group">
+                 <label for="input-castka" data-tooltip-slow title="Převodní částka je částka kterou budeme z vybrané měny vlevo převádět na měnu vpravo." data-toggle="tooltip"  data-placement="left">Převodní částka:</label>
+                 <input type="number" class="form-control head-inputs" value="1" id="input-castka" placeholder="Částka">
+             </div>
+         </div>
+        <div class="col-2 align-middle tcenter">na</div>
+        <div class="col-5">
+            <select class="form-control meny" size="6" id="second">
+            </select>
+            <div class="form-group inputs-group">
+                <label for="input-datum" data-tooltip-slow title="Zde můžete vyplnit datum a převádět s kurzy toho dne, při nevyplnění se automaticky dává datum poslední změny kurzu." data-toggle="tooltip"  data-placement="left">Pro datum: </label>
+                <div class="row">
+                    <div class="col-8" style="padding-right: 0;">
+                         <input type="date" min="1991-01-01" max="" class="form-control head-inputs" id="input-datum"  style="text-align:left;" placeholder="Datum">
+                    </div>
+                    <div class="col-4">
+                        <input type="number" data-toggle="tooltip" title="Zaokrouhlení" data-placement="top" min="1" max="9" class="form-control head-inputs" id="input-zaokr" value="2">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="submit" class="btn" id="prevod-button" style="border: 1px solid #ced4da;"/>
+    <div id="alert-vysledek" data-template></div>
+    <div id="vysledek" data-template></div>
+</div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
+<script src="js/api.js"></script>
+    <script type="text/template" id="alert">
+        <div class="alert alert-{{type}}" role="alert" style="border-radius: 0; margin-top: 16px;">
+            <h4 class="alert-heading">{{nadpis}}</h4>
+            <p>{{obsah}}</p>
+            <hr>
+            <p class="mb-0">{{footer}}</p>
+        </div>
+    </script>
+    <script type="text/template" id="tabulka-vysledek">
+        <div class="vysledkova-tabulka">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">{{date}}</th>
+                        <th scope="col">Částka/měna</th>
+                        <th scope="col">Znaménko</th>
+                        <th scope="col">Částka/měna</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th scope="row">Výpočet</th>
+                        <td id="menafirst">{{mena1}}</td>
+                        <td>/</td>
+                        <td id="menasecond">{{mena2}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Výsledek</th>
+                        <td id="castka-first">{{castka1}}</td>
+                        <td>=</td>
+                        <td id="castka-second">{{castka2}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Zpětný</th>
+                        <td id="zpetny-first">{{zpetny1}}</td>
+                        <td>=</td>
+                        <td id="zpetny-second">{{zpetny2}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </script>
+<script type="text/javascript" src="js/main.js"></script>
+</div>
+</body>
+</html>
