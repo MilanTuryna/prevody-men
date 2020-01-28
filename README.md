@@ -1,5 +1,6 @@
 # Převodník měn
 Převodník měn s využitím kurzovního lístku ČNB, první verze této aplikace byla též zveřejněna na IT sociální síti https://itnetwork.cz do vánoční soutěže 2019. Aplikace je celá naprogramovaná v JavaScriptu s použitím knihovny jQuery.
+
 **Mezi funkčnost aplikace patří:**
 - samotný převod
 - zaokrouhlení výsledku
