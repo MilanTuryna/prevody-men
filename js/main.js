@@ -1,5 +1,5 @@
 "use strict";
-APIParser.lastTime(function(time) {
+APIParser.lastTime((time) => {
     $('.last_date').text(time);
     let date_array = time.split('.').reverse();
     $('#prevod-button').val('Převést měnu pro datum ' + time);
@@ -7,7 +7,7 @@ APIParser.lastTime(function(time) {
     $('#input-datum').val(date_array[0] + '-' + date_array[1] + '-' +  date_array[2]);
 });
 
-APIParser.currency(function (options, count = null) {
+APIParser.currency((options, count = null) => {
     let i, array_options = options.split('</option>').sort();
 
     options = '<option value="disabled" id="option-to-delete" disabled selected>Vyber měnu</option>';
@@ -22,26 +22,34 @@ APIParser.currency(function (options, count = null) {
 
 });
 
+/**
+ * @param element
+ * @param template
+ * @param variables
+ * @param blind
+ */
 function createComponent(element, template, variables, blind) {
     element = "#" + element;
     blind = (typeof blind === 'undefined');
     $(element).html(document.getElementById(template).innerHTML.strReplace(variables));
+    (blind) ? $(element).show("blind") : $(element).fadeIn('slow');
 
-    if(blind) {
-        $(element).show("blind");
-    } else {
-        $(element).fadeIn('slow');
-    }
     $('html, body').animate({
         scrollTop: $(element).offset().top
     }, 1300);
 }
 
-function deleteComponent(element, view) {
+/**
+ * @param element
+ */
+function deleteComponent(element) {
     element = "#" + element;
     $(element).hide( "blind" );
 }
-
+/**
+ * @param i
+ * @returns {string}
+ */
 function addZero(i) {
     if (i < 10) {
         i = "0" + i;
@@ -50,8 +58,7 @@ function addZero(i) {
 }
 
 $('a').attr('target', '_blank');
-
-$(function () {$('[data-toggle="tooltip"]').tooltip();});
+$(()=>{$('[data-toggle="tooltip"]').tooltip();});
 $('[data-tooltip-slow]').tooltip({
     delay: {
         show: 1000,
@@ -59,14 +66,14 @@ $('[data-tooltip-slow]').tooltip({
     }
 });
 $('.overlay-loader').fadeOut(800);
-setTimeout(function () {
+setTimeout(()=>{
     $('.body').fadeIn(600);
 }, 800);
 
 $(document).ready(function() {
-    $('#input-datum').on('change',function() {
-        let val = $(this).val().split('-').reverse();
-        let result;
+    $('#input-datum').on('change',()=>{
+        let val = $(this).val().split('-').reverse(),
+            result;
 
         if(typeof val[2] === "undefined") {
             $('#prevod-button').val('Chyba! Vybral jste den který v daném měsíci neexistuje.');
@@ -80,22 +87,15 @@ $(document).ready(function() {
 });
 
 $('.meny::-webkit-scrollbar-track').css('backgroundColor', '#e4f5e4');
-
-function del(el) {
-    $(el).remove();
-}
-$('#prevod-button').on('click', function () {
+$('#prevod-button').on('click', ()=>{
     let first = document.getElementById('first'),
         second = document.getElementById('second'),
         castka = document.getElementById('input-castka'),
         zaokr = document.getElementById('input-zaokr'),
-        zaokrvalue = '',
-        d = new Date(),
-        time,
-        datum = document.getElementById('input-datum');
+        d = new Date(), time, datum = document.getElementById('input-datum');
 
     if(first.value !== 'disabled' && first.value && second.value !== 'disabled' && second.value) {
-        APIParser.getMoney(first.value, second.value,function (countfirst, countsecond, ok) {
+        APIParser.getMoney(first.value, second.value,(countfirst, countsecond, ok) => {
             if(ok) {
                 let zaokrvalue = zaokr.value;
                 if (parseFloat(zaokrvalue) > 9) {
@@ -137,7 +137,7 @@ $('#prevod-button').on('click', function () {
     } else {
         $('#prevod-button').val('Nemůžeš převádět když sis nevybral měnu.');
         $('#prevod-button').attr('disabled', 'disabled');
-        setTimeout(function () {
+        setTimeout(()=>{
             $('#prevod-button').val('Zkus to znovu.. převést měnu pro datum ' + $('#input-datum').val().split('-').reverse().join('.'));
             $('#prevod-button').removeAttr('disabled');
         }, 1000)
