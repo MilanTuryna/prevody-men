@@ -7,7 +7,8 @@ Převodník měn s využitím kurzovního lístku ČNB, první verze této aplik
 - vysvětlení určitých slov / zkratek při najetí (tooltips)
 
 # English
-Currency converter with the use of ČNB API, first version of this application was published to ITnetwork.cz Winter 2019. Application is developed in JavaScript with jQuery library.
+Currency converter with the use of Czech National Bank API, first version of this application was published to ITnetwork.cz Winter 2019. Application is developed in JavaScript with jQuery library.
+
 **Features**
 - convertion
 - rounding options
