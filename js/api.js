@@ -29,7 +29,7 @@ Array.prototype.where = function (matcher) {
 /**
  * @type {{settings: {url: string, date_url: string, zaloha_url: string}, getResponse: API.getResponse}}
  */
-const API = {
+var API = {
     settings: {
         url: 'https://yacdn.org/serve/https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.xml?maxAge=3600',
         zaloha_url: 'https://api.codetabs.com/v1/proxy?quest=https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.xml',
@@ -62,19 +62,19 @@ const API = {
 /**
  * @type {{getElementByAttribute: (function(*, *=, *=, *): *[]|string)}}
  */
-const XMLParse = {
-  getElementByAttribute: (xml,tag,attr,value) => {
-      var elems, matcher, output;
-      if (tag === 'radek' && attr === 'kod' && value === 'CZK') {
-          output = '1';
-      } else {
-          elems = Array.prototype.slice.call(xml.getElementsByTagName(tag), 0);
-          matcher = function (el) {return el.getAttribute(attr) === value;};
-          output = elems.where(matcher);
-      }
+var XMLParse = {
+    getElementByAttribute: (xml,tag,attr,value) => {
+        var elems, matcher, output;
+        if (tag === 'radek' && attr === 'kod' && value === 'CZK') {
+            output = '1';
+        } else {
+            elems = Array.prototype.slice.call(xml.getElementsByTagName(tag), 0);
+            matcher = function (el) {return el.getAttribute(attr) === value;};
+            output = elems.where(matcher);
+        }
 
-      return output;
-  }
+        return output;
+    }
 };
 /**
  * @type {{lastTime: APIParser.lastTime, currency: APIParser.currency, CURRENCY_READABLE: {HRK: string, CHF: string, MXN: string, ZAR: string, INR: string, CNY: string,
@@ -83,7 +83,7 @@ const XMLParse = {
  * getMoney: APIParser.getMoney}}
  */
 
-const APIParser = {
+var APIParser = {
     CURRENCY_READABLE: {
         'AUD': 'Australský dolar',
         'BRL': 'Brazilský real',

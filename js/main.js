@@ -71,7 +71,7 @@ setTimeout(()=>{
 }, 800);
 
 $(document).ready(function() {
-    $('#input-datum').on('change',()=>{
+    $('#input-datum').on('change',function () {
         let val = $(this).val().split('-').reverse(),
             result;
 
