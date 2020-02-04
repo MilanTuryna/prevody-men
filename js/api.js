@@ -141,11 +141,12 @@ var APIParser = {
     }, getMoney: (mena, druhamena, callback, date) => {
         API.getResponse((response) => {
             let select = XMLParse.getElementByAttribute(response.responseXML, 'radek', 'kod', mena.toUpperCase())[0],
+                two_select = XMLParse.getElementByAttribute(response.responseXML, 'radek', 'kod', druhamena.toUpperCase())[0],
                 count,
                 success,
                 two_count;
 
-            if (typeof select === "undefined") {
+            if (typeof select === "undefined" || typeof two_select === "undefined") {
                 success = false;
             } else {
                 if(mena !== 'CZK' && druhamena === 'CZK') {
