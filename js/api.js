@@ -70,49 +70,14 @@ var XMLParse = {
         return output;
     }
 };
+
 /**
- * @type {{lastTime: APIParser.lastTime, currency: APIParser.currency, CURRENCY_READABLE: {HRK: string, CHF: string, MXN: string, ZAR: string, INR: string, CNY: string,
- * THB: string, AUD: string, ILS: string, KRW: string, JPY: string, PLN: string, GBP: string, IDR: string, HUF: string, PHP: string, TRY: string, RUB: string, HKD: string,
- * ISK: string, EUR: string, DKK: string, CAD: string, MYR: string, XDR: string, USD: string, BGN: string, NOK: string, RON: string, SGD: string, SEK: string, NZD: string, BRL: string},
- * getMoney: APIParser.getMoney}}
+ * @type {{lastTime: APIParser.lastTime, currency: APIParser.currency, getMoney: APIParser.getMoney}}
  */
 
 var APIParser = {
-    CURRENCY_READABLE: {
-        'AUD': 'Australský dolar',
-        'BRL': 'Brazilský real',
-        'BGN': 'Bulharský lev',
-        'CNY' : 'Čínský žen-min-pi',
-        'DKK' : 'Dánská koruna',
-        'EUR' : 'Euro',
-        'PHP' : 'Filipínské peso',
-        'HKD' : 'Hongkongský dolar',
-        'HRK' : 'Chorvatská kuna',
-        'INR' : 'Indická rupie',
-        'IDR' : 'Indonéská rupie',
-        'ISK' : 'Islandská koruna',
-        'ILS' : 'Nový izraelský šekel',
-        'JPY' : 'Japonský jen',
-        'ZAR' : 'Jihoafrický rand',
-        'CAD' : 'Kanadský dolar',
-        'KRW' : 'Korejský won',
-        'HUF' : 'Maďarský forint',
-        'MYR' : 'Malajsijský ringgit',
-        'MXN' : 'Mexické peso',
-        'XDR' : 'ZPČ (MMF)',
-        'NOK' : 'Norská koruna',
-        'NZD' : 'Novozélandský dolar',
-        'PLN' : 'Polský zlotý',
-        'RON' : 'Rumunské leu',
-        'RUB' : 'Ruský rubl',
-        'SGD' : 'Singapurský dolar',
-        'SEK' : 'Švédská koruna',
-        'CHF' : 'Švýcarský frank',
-        'THB' : 'Thajský baht',
-        'TRY' : 'Turecká lira',
-        'USD' : 'Americký dolar',
-        'GBP' : 'Britská libra'
-    }, lastTime: (callback) => {
+    CURRENCY_READABLE: config.CURRENCY,
+    lastTime: (callback) => {
         API.getResponse((response) => {
             let select = response.responseXML.getElementsByTagName('kurzy')[0].getAttribute('datum');
             callback(select);
