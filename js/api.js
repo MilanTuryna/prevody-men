@@ -26,21 +26,15 @@ Array.prototype.where = function (matcher) {
     }
     return result;
 };
-/**
- * @type {{settings: {url: string, date_url: string, zaloha_url: string}, getResponse: API.getResponse}}
- */
+
 var API = {
-    settings: {
-        url: 'https://yacdn.org/serve/https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.xml?maxAge=3600',
-        zaloha_url: 'https://api.codetabs.com/v1/proxy?quest=https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.xml',
-        date_url: 'https://yacdn.org/proxy/https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.xml'
-    }, getResponse: (callback, date) => {
-        let url = API.settings.url,
-            zaloha_url = API.settings.zaloha_url,
+    getResponse: (callback, date) => {
+        let url = config.REQUEST.classic,
+            zaloha_url = config.REQUEST.backup,
             xhttp = new XMLHttpRequest();
 
         if (date) {
-            url = API.settings.date_url + '?date=' + date;
+            url = config.REQUEST.with_date + date;
             zaloha_url += '?date=' + date;
         }
 

@@ -7,7 +7,7 @@ APIParser.lastTime((time) => {
     $('#input-datum').val(date_array[0] + '-' + date_array[1] + '-' +  date_array[2]);
 });
 
-APIParser.currency((options, count = null) => {
+APIParser.currency((options, count) => {
     let i, array_options = options.split('</option>').sort();
 
     options = '<option value="disabled" id="option-to-delete" disabled selected>Vyber měnu</option>';
@@ -32,7 +32,7 @@ function createComponent(element, template, variables, blind) {
     element = "#" + element;
     blind = (typeof blind === 'undefined');
     $(element).html(document.getElementById(template).innerHTML.strReplace(variables));
-    (blind) ? $(element).show("blind") : $(element).fadeIn('slow');
+    (blind) ? $(element).show(config.UI.show) : $(element).fadeIn(config.UI.fade);
 
     $('html, body').animate({
         scrollTop: $(element).offset().top
@@ -44,7 +44,7 @@ function createComponent(element, template, variables, blind) {
  */
 function deleteComponent(element) {
     element = "#" + element;
-    $(element).hide( "blind" );
+    $(element).hide(config.UI.show);
 }
 /**
  * @param i
@@ -59,12 +59,7 @@ function addZero(i) {
 
 $('a').attr('target', '_blank');
 $(()=>{$('[data-toggle="tooltip"]').tooltip();});
-$('[data-tooltip-slow]').tooltip({
-    delay: {
-        show: 1000,
-        hide: 0
-    }
-});
+$('[data-tooltip-slow]').tooltip(config.UI.tooltip_slow);
 $('.overlay-loader').fadeOut(800);
 setTimeout(()=>{
     $('.body').fadeIn(600);
@@ -86,7 +81,6 @@ $(document).ready(function() {
     });
 });
 
-$('.meny::-webkit-scrollbar-track').css('backgroundColor', '#e4f5e4');
 $('#prevod-button').on('click', ()=>{
     let first = document.getElementById('first'),
         second = document.getElementById('second'),
@@ -94,7 +88,9 @@ $('#prevod-button').on('click', ()=>{
         zaokr = document.getElementById('input-zaokr'),
         d = new Date(), time, datum = document.getElementById('input-datum');
 
-    if(first.value !== 'disabled' && first.value && second.value !== 'disabled' && second.value) {
+    if(first.value !== 'disabled' && first.value && second.value !== 'disabled' && second.value
+        && parseInt(datum.value.split("-")[0]) > parseInt(datum.getAttribute('min').split("-")[0]))
+    {
         APIParser.getMoney(first.value, second.value,(countfirst, countsecond, ok) => {
             if(ok) {
                 let zaokrvalue = zaokr.value;
@@ -134,6 +130,13 @@ $('#prevod-button').on('click', ()=>{
             }
 
         }, datum.value.split('-').reverse().join('.'));
+    } else if(parseInt(datum.value.split('-')[0]) < parseInt(datum.getAttribute('min').split("-")[0])) {
+        createComponent('alert-vysledek', 'alert', {
+           '{{type}}': 'danger',
+           '{{nadpis}}': 'Chyba datum',
+           '{{obsah}}': 'Nastavil jste datum, kdy nebyl kurzovní lístek od ČNB k dispozici, prosím zadejte datum od 1.1.1991',
+           '{{footer}}': addZero(d.getHours()) + ':' + addZero(d.getMinutes())
+        });
     } else {
         $('#prevod-button').val('Nemůžeš převádět když sis nevybral měnu.');
         $('#prevod-button').attr('disabled', 'disabled');
@@ -141,6 +144,5 @@ $('#prevod-button').on('click', ()=>{
             $('#prevod-button').val('Zkus to znovu.. převést měnu pro datum ' + $('#input-datum').val().split('-').reverse().join('.'));
             $('#prevod-button').removeAttr('disabled');
         }, 1000)
-
     }
 });

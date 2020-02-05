@@ -230,6 +230,7 @@ main {
     -webkit-animation-timing-function: linear;
     -moz-animation-timing-function: linear;
 }
+
 .loader div {
     width: 8px;
     height: 8px;
