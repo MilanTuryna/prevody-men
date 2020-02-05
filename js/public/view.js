@@ -1,5 +1,8 @@
 "use strict";
-APIParser.lastTime((time) => {
+import {config} from "../config.js";
+import {APIParser} from '../api/main.js';
+
+APIParser.lastTime(time => {
     $('.last_date').text(time);
     let date_array = time.split('.').reverse();
     $('#prevod-button').val('Převést měnu pro datum ' + time);
@@ -22,12 +25,6 @@ APIParser.currency((options, count) => {
 
 });
 
-/**
- * @param element
- * @param template
- * @param variables
- * @param blind
- */
 function createComponent(element, template, variables, blind) {
     element = "#" + element;
     blind = (typeof blind === 'undefined');
@@ -39,17 +36,11 @@ function createComponent(element, template, variables, blind) {
     }, 1300);
 }
 
-/**
- * @param element
- */
 function deleteComponent(element) {
     element = "#" + element;
     $(element).hide(config.UI.show);
 }
-/**
- * @param i
- * @returns {string}
- */
+
 function addZero(i) {
     if (i < 10) {
         i = "0" + i;
@@ -65,20 +56,16 @@ setTimeout(()=>{
     $('.body').fadeIn(600);
 }, 800);
 
-$(document).ready(function() {
-    $('#input-datum').on('change',function () {
-        let val = $(this).val().split('-').reverse(),
-            result;
-
-        if(typeof val[2] === "undefined") {
-            $('#prevod-button').val('Chyba! Vybral jste den který v daném měsíci neexistuje.');
-            $('#prevod-button').attr('disabled', 'disabled');
-        } else {
-            result = val[0] + '.' + val[1] + '.' + val[2];
-            $('#prevod-button').val('Převést měnu pro datum ' + result);
-            $('#prevod-button').removeAttr('disabled');
-        }
-    });
+$('#input-datum').on('change',() => {
+    let val = $(this).val().split('-').reverse(), result;
+    if(typeof val[2] === "undefined") {
+        $('#prevod-button').val('Chyba! Vybral jste den který v daném měsíci neexistuje.');
+        $('#prevod-button').attr('disabled', 'disabled');
+    } else {
+        result = val[0] + '.' + val[1] + '.' + val[2];
+        $('#prevod-button').val('Převést měnu pro datum ' + result);
+        $('#prevod-button').removeAttr('disabled');
+    }
 });
 
 $('#prevod-button').on('click', ()=>{
