@@ -57,7 +57,7 @@ setTimeout(()=>{
 }, 800);
 
 $('#input-datum').on('change',() => {
-    let val = $(this).val().split('-').reverse(), result;
+    let val = $('#input-datum').val().split('-').reverse(), result;
     if(typeof val[2] === "undefined") {
         $('#prevod-button').val('Chyba! Vybral jste den který v daném měsíci neexistuje.');
         $('#prevod-button').attr('disabled', 'disabled');
@@ -75,10 +75,17 @@ $('#prevod-button').on('click', ()=>{
         zaokr = document.getElementById('input-zaokr'),
         d = new Date(), time, datum = document.getElementById('input-datum');
 
+    let before_val = $('#prevod-button').val();
+    $('#prevod-button').val('Vypočítávám..');
+    $('#prevod-button').attr('disabled', 'disabled');
     if(first.value !== 'disabled' && first.value && second.value !== 'disabled' && second.value
         && parseInt(datum.value.split("-")[0]) > parseInt(datum.getAttribute('min').split("-")[0]))
     {
         APIParser.getMoney(first.value, second.value,(countfirst, countsecond, ok) => {
+            setTimeout(()=> {
+                    $('#prevod-button').val(before_val);
+                    $('#prevod-button').removeAttr('disabled');
+                }, 250);
             if(ok) {
                 let zaokrvalue = zaokr.value;
                 if (parseFloat(zaokrvalue) > 9) {
@@ -133,3 +140,5 @@ $('#prevod-button').on('click', ()=>{
         }, 1000)
     }
 });
+
+

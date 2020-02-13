@@ -12,6 +12,12 @@ export const config = {
                 show: 1000,
                 hide: 0
             }
+        },
+        themes: {
+            dark: {
+                "background": '#364031'
+            },
+            light: ''
         }
     }, CURRENCY: {
         'AUD': 'Australský dolar',
