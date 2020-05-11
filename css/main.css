@@ -2,6 +2,15 @@ body {
     background-color:#fff;
 }
 
+.modal-content {
+    border-radius:0!important;
+    border:none;
+}
+
+a {
+    color:#000 !important;
+}
+
 ::selection {
     background-color: #3B6060;
     color:#fff;
@@ -13,9 +22,10 @@ body {
     margin-bottom:0;
 }
 
-#kurzy-men {
-    margin-bottom:16px;
+#kurzy-modal table * {
+    text-align:center;
 }
+
 
 [data-template] {
     display:none;
@@ -25,6 +35,27 @@ select option * {
     transition:0.0s;
     color:#fff;
 }
+
+#kurzy-table {
+    width:99.999%;
+}
+
+.toolbar {
+    background: #4F9170;
+    width:100%;
+}
+
+.toolbar .col {
+    padding:1vh;
+    transition:0.3s;
+    cursor:pointer;
+    color:#fff!important;
+}
+
+.toolbar .col:hover {
+    background-color:#3d7358;
+}
+
 
 input, select {
     border-radius: 0px !important;
@@ -37,6 +68,14 @@ input, select {
     border-bottom-style: solid;
 }
 
+.bg-light-green {
+    background:#e4f5e4;
+}
+
+.modal * {
+  box-shadow: none;
+}
+
 .tcenter {
     text-align:center;
     user-select:none;
@@ -46,6 +85,10 @@ input, select {
 .meny::-webkit-scrollbar {
     width:11px;
 
+}
+
+.fatal {
+    margin-bottom: 6vh;
 }
 
 label {
@@ -339,3 +382,4 @@ main {
         -moz-transform: rotate(0deg);
     }
 }
+

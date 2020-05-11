@@ -1,10 +1,15 @@
 export const config = {
     REQUEST: {
         classic: `https://yacdn.org/serve/https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.xml`,
-        backup: `https://api.codetabs.com/v1/proxy?quest=https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.xml`,
-        with_date: `https://yacdn.org/proxy/https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.xml?date=`
-    },
-    UI: {
+        backup: `https://cors-anywhere.herokuapp.com/https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.xml`,
+        with_date: `https://yacdn.org/proxy/https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.xml?date=`,
+        original: {
+            xml: 'https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.xml',
+            txt: 'https://www.cnb.cz/cs/financni-trhy/devizovy-trh/kurzy-devizoveho-trhu/kurzy-devizoveho-trhu/denni_kurz.txt',
+        }
+    }, STATUSES: {
+        zalozni: 'Aplikace bude pomalejší z důvodu výpadku hlavního cache serveru'
+    }, UI: {
         show: 'blind',
         fade: 'slow',
         tooltip_slow: {
@@ -13,39 +18,41 @@ export const config = {
                 hide: 0
             }
         }
+    }, MSGS: {
+        processing: 'Vypočítávám..'
     }, CURRENCY: {
-        'AUD': 'Australský dolar',
-        'BRL': 'Brazilský real',
-        'BGN': 'Bulharský lev',
-        'CNY' : 'Čínský žen-min-pi',
-        'DKK' : 'Dánská koruna',
-        'EUR' : 'Euro',
-        'PHP' : 'Filipínské peso',
-        'HKD' : 'Hongkongský dolar',
-        'HRK' : 'Chorvatská kuna',
-        'INR' : 'Indická rupie',
-        'IDR' : 'Indonéská rupie',
-        'ISK' : 'Islandská koruna',
-        'ILS' : 'Nový izraelský šekel',
-        'JPY' : 'Japonský jen',
-        'ZAR' : 'Jihoafrický rand',
-        'CAD' : 'Kanadský dolar',
-        'KRW' : 'Korejský won',
-        'HUF' : 'Maďarský forint',
-        'MYR' : 'Malajsijský ringgit',
-        'MXN' : 'Mexické peso',
-        'XDR' : 'ZPČ (MMF)',
-        'NOK' : 'Norská koruna',
-        'NZD' : 'Novozélandský dolar',
-        'PLN' : 'Polský zlotý',
-        'RON' : 'Rumunské leu',
-        'RUB' : 'Ruský rubl',
-        'SGD' : 'Singapurský dolar',
-        'SEK' : 'Švédská koruna',
-        'CHF' : 'Švýcarský frank',
-        'THB' : 'Thajský baht',
-        'TRY' : 'Turecká lira',
-        'USD' : 'Americký dolar',
-        'GBP' : 'Britská libra'
+        'aud': 'Australský dolar',
+        'brl': 'Brazilský real',
+        'bgn': 'Bulharský lev',
+        'cny' : 'Čínský žen-min-pi',
+        'dkk' : 'Dánská koruna',
+        'eur' : 'Euro',
+        'php' : 'Filipínské peso',
+        'hkd' : 'Hongkongský dolar',
+        'hrk' : 'Chorvatská kuna',
+        'inr' : 'Indická rupie',
+        'idr' : 'Indonéská rupie',
+        'isk' : 'Islandská koruna',
+        'ils' : 'Nový izraelský šekel',
+        'jpy' : 'Japonský jen',
+        'zar' : 'Jihoafrický rand',
+        'cad' : 'Kanadský dolar',
+        'krw' : 'Korejský won',
+        'huf' : 'Maďarský forint',
+        'myr' : 'Malajsijský ringgit',
+        'mxn' : 'Mexické peso',
+        'xdr' : 'MMF',
+        'nok' : 'Norská koruna',
+        'nzd' : 'Novozélandský dolar',
+        'pln' : 'Polský zlotý',
+        'ron' : 'Rumunské leu',
+        'rub' : 'Ruský rubl',
+        'sgd' : 'Singapurský dolar',
+        'sek' : 'Švédská koruna',
+        'chf' : 'Švýcarský frank',
+        'thb' : 'Thajský baht',
+        'try' : 'Turecká lira',
+        'usd' : 'Americký dolar',
+        'gbp' : 'Britská libra'
     }
 };

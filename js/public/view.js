@@ -1,5 +1,6 @@
 "use strict";
 import {config} from "../config.js";
+import * as Template from "../core/templating.js"
 import {APIParser} from '../api/main.js';
 
 APIParser.lastTime(time => {
@@ -22,33 +23,15 @@ APIParser.currency((options, count) => {
 
     $('.meny').html(options);
     $('#currency_count').text(count);
-
 });
 
-function createComponent(element, template, variables, blind) {
-    element = "#" + element;
-    blind = (typeof blind === 'undefined');
-    $(element).html(document.getElementById(template).innerHTML.strReplace(variables));
-    (blind) ? $(element).show(config.UI.show) : $(element).fadeIn(config.UI.fade);
 
-    $('html, body').animate({
-        scrollTop: $(element).offset().top
-    }, 1300);
-}
-
-function deleteComponent(element) {
-    element = "#" + element;
-    $(element).hide(config.UI.show);
-}
 
 function addZero(i) {
-    if (i < 10) {
-        i = "0" + i;
-    }
+    if (i < 10) i = "0" + i;
     return i;
 }
 
-$('a').attr('target', '_blank');
 $(()=>{$('[data-toggle="tooltip"]').tooltip();});
 $('[data-tooltip-slow]').tooltip(config.UI.tooltip_slow);
 $('.overlay-loader').fadeOut(800);
@@ -56,7 +39,8 @@ setTimeout(()=>{
     $('.body').fadeIn(600);
 }, 800);
 
-$('#input-datum').on('change',() => {
+
+$('#input-datum').on('change', () => {
     let val = $('#input-datum').val().split('-').reverse(), result;
     if(typeof val[2] === "undefined") {
         $('#prevod-button').val('Chyba! Vybral jste den který v daném měsíci neexistuje.');
@@ -76,10 +60,10 @@ $('#prevod-button').on('click', ()=>{
         d = new Date(), time, datum = document.getElementById('input-datum');
 
     let before_val = $('#prevod-button').val();
-    $('#prevod-button').val('Vypočítávám..');
+    $('#prevod-button').val(config.MSGS.processing);
     $('#prevod-button').attr('disabled', 'disabled');
     if(first.value !== 'disabled' && first.value && second.value !== 'disabled' && second.value
-        && parseInt(datum.value.split("-")[0]) > parseInt(datum.getAttribute('min').split("-")[0]))
+        && parseInt(datum.value.split("-")[0]) >= parseInt(datum.getAttribute('min').split("-")[0]))
     {
         APIParser.getMoney(first.value, second.value,(countfirst, countsecond, ok) => {
             setTimeout(()=> {
@@ -91,41 +75,42 @@ $('#prevod-button').on('click', ()=>{
                 if (parseFloat(zaokrvalue) > 9) {
                     zaokr.value = "9";
                     time = addZero(d.getHours()) + ':' + addZero(d.getMinutes());
-                    createComponent('alert-vysledek', 'alert', {
+                    Template.createComponent('alert-vysledek', 'alert', {
                         '{{type}}': 'warning',
                         '{{nadpis}}': 'Změna ve výpočtu',
                         '{{obsah}}': 'Zadal jste v zaokrouhlení větší číslo jak 9, proto byl výpočet automaticky zaokrouhlen na 9 desetinných čísel. Limit je nastaven kvůli dobré viditelnosti.',
                         '{{footer}}': time
                     });
                 } else {
-                    deleteComponent('alert-vysledek', 1000);
+                    Template.deleteComponent('alert-vysledek', 1000);
                 }
 
                 let vysledek = (parseFloat(countfirst) * parseFloat(castka.value) / parseFloat(countsecond)).toFixed(parseFloat(zaokr.value));
                 let zpetny = (parseFloat(countsecond) * parseFloat(castka.value) / parseFloat(countfirst)).toFixed(parseFloat(zaokr.value));
 
-                createComponent('vysledek', 'tabulka-vysledek', {
-                    '{{mena1}}': first.value,
-                    '{{mena2}}': second.value,
-                    '{{castka1}}': castka.value + ' ' + first.value,
-                    '{{castka2}}': vysledek + ' ' + second.value,
-                    '{{zpetny1}}': castka.value + ' ' + second.value,
-                    '{{zpetny2}}': zpetny + ' ' + first.value,
+                Template.createComponent('vysledek', 'tabulka-vysledek', {
+                    '{{mena1}}': first.value.toUpperCase(),
+                    '{{mena2}}': second.value.toUpperCase(),
+                    '{{castka1}}': castka.value + ' ' + first.value.toUpperCase(),
+                    '{{castka2}}': vysledek + ' ' + second.value.toUpperCase(),
+                    '{{zpetny1}}': castka.value + ' ' + second.value.toUpperCase(),
+                    '{{zpetny2}}': zpetny + ' ' + first.value.toUpperCase(),
                     '{{date}}': datum.value.split('-').reverse().join('.')
                 }, false);
 
             } else {
-                createComponent('alert-vysledek', 'alert', {
-                    '{{type}}': 'danger',
+                Template.createComponent('alert-vysledek', 'alert', {
+                    '{{type}}': 'danger fatal',
                     '{{nadpis}}': 'Chyba datumu',
                     '{{obsah}}': 'Nastavil jste datum kdy daná měna nebyla k dispozici v kurzovním lístku od ČNB, prosím zadejte novější datum.',
                     '{{footer}}': addZero(d.getHours()) + ':' + addZero(d.getMinutes())
                 });
+                Template.deleteComponent('vysledek');
             }
 
         }, datum.value.split('-').reverse().join('.'));
     } else if(parseInt(datum.value.split('-')[0]) < parseInt(datum.getAttribute('min').split("-")[0])) {
-        createComponent('alert-vysledek', 'alert', {
+        Template.createComponent('alert-vysledek', 'alert', {
            '{{type}}': 'danger',
            '{{nadpis}}': 'Chyba datum',
            '{{obsah}}': 'Nastavil jste datum, kdy nebyl kurzovní lístek od ČNB k dispozici, prosím zadejte datum od 1.1.1991',
@@ -141,4 +126,6 @@ $('#prevod-button').on('click', ()=>{
     }
 });
 
+$('#kurzy-button').on('click', () => $('#kurzy-modal').modal());
+APIParser.renderKurzy();
 

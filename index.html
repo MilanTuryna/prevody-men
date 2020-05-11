@@ -12,7 +12,9 @@
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
-
+    <script>
+        $('a').attr('target', '_blank');
+    </script>
 </head>
 <body>
 <div class="overlay-loader">
@@ -26,7 +28,7 @@
         <div></div>
     </div>
 </div>
-<div class="body" style="display:none;">
+<div class="body" id="body--" style="display:none;">
 <header>
 <div class="jumbotron" id="header">
     <div class="container">
@@ -42,6 +44,7 @@
 </nav>
 <main style="padding: .5rem 1rem;">
 <div class="container">
+    <div id="status" data-insert="status"></div>
     <h4>
         Převod
         <small class="text-muted">(dostupných je <span id="currency_count"></span> měn, číslo se líší od datumu)</small>
@@ -78,54 +81,78 @@
     <div id="vysledek" data-template></div>
 </div>
 </main>
+    <footer class="toolbar" id="toolbar" style="position:fixed; bottom:0;">
+        <div class="container">
+            <div class="row">
+                <div class="col" id="kurzy-button" style="color:#000;">
+                    Kurzy měn
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
-    <script type="text/template" id="alert">
-        <div class="alert alert-{{type}}" role="alert" style="border-radius: 0; margin-top: 16px;">
-            <h4 class="alert-heading">{{nadpis}}</h4>
-            <p>{{obsah}}</p>
-            <hr>
-            <p class="mb-0">{{footer}}</p>
-        </div>
-    </script>
-    <script type="text/template" id="tabulka-vysledek">
-        <div class="vysledkova-tabulka">
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th scope="col">{{date}}</th>
-                        <th scope="col">Částka/měna</th>
-                        <th scope="col">Znaménko</th>
-                        <th scope="col">Částka/měna</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <th scope="row">Výpočet</th>
-                        <td id="menafirst">{{mena1}}</td>
-                        <td>/</td>
-                        <td id="menasecond">{{mena2}}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Výsledek</th>
-                        <td id="castka-first">{{castka1}}</td>
-                        <td>=</td>
-                        <td id="castka-second">{{castka2}}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Zpětný</th>
-                        <td id="zpetny-first">{{zpetny1}}</td>
-                        <td>=</td>
-                        <td id="zpetny-second">{{zpetny2}}</td>
-                    </tr>
-                    </tbody>
-                </table>
+<script type="text/template" id="alert">
+    <div class="alert alert-{{type}}" role="alert" style="border-radius: 0; margin-top: 16px;">
+        <h4 class="alert-heading">{{nadpis}}</h4>
+        <p>{{obsah}}</p>
+        <hr>
+        <p class="mb-0">{{footer}}</p>
+    </div>
+</script>
+
+<div class="modal fade" id="kurzy-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Kurzy měn <small class="last_date"></small></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="padding:0;" id="kurzyTableModal" data-insert="kurzy">
             </div>
         </div>
-    </script>
+    </div>
 </div>
+<script type="text/template" id="tabulka-vysledek">
+    <div class="vysledkova-tabulka" style="margin-bottom: 6vh">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">{{date}}</th>
+                    <th scope="col">Částka/měna</th>
+                    <th scope="col">Znaménko</th>
+                    <th scope="col">Částka/měna</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">Výpočet</th>
+                    <td id="menafirst">{{mena1}}</td>
+                    <td>/</td>
+                    <td id="menasecond">{{mena2}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Výsledek</th>
+                    <td id="castka-first">{{castka1}}</td>
+                    <td>=</td>
+                    <td id="castka-second">{{castka2}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Zpětný</th>
+                    <td id="zpetny-first">{{zpetny1}}</td>
+                    <td>=</td>
+                    <td id="zpetny-second">{{zpetny2}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</script>
 <script src="js/public/prototypes.js"></script>
 <script src="js/public/view.js" type="module"></script>
 </body>
